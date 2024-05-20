@@ -490,6 +490,9 @@ class ModelSelect2Mixin(object):
 
         """
         return force_text(obj)
+    
+    class Media:
+        js = ("https://code.jquery.com/jquery-3.5.1.slim.min.js",)
 
 
 class ModelSelect2Widget(ModelSelect2Mixin, HeavySelect2Widget):
