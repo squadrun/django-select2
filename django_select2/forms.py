@@ -533,6 +533,9 @@ class ModelSelect2Mixin:
         """
         return str(obj)
 
+    class Media:
+        js = ("https://code.jquery.com/jquery-3.5.1.min.js",)
+
 
 class ModelSelect2Widget(ModelSelect2Mixin, HeavySelect2Widget):
     """
