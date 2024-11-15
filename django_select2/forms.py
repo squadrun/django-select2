@@ -56,7 +56,7 @@ from django import forms
 from django.core import signing
 from django.db.models import Q
 from django.forms.models import ModelChoiceIterator
-from django.utils.encoding import force_text
+from django.utils.encoding import force_str
 from six.moves.cPickle import PicklingError as cPicklingError
 
 from .cache import cache
@@ -263,8 +263,8 @@ class HeavySelect2Mixin(object):
         else:
             choices = self.choices
         output = ['<option value=""></option>' if not self.is_required and not self.allow_multiple_selected else '']
-        selected_choices = {force_text(v) for v in selected_choices}
-        choices = [(k, v) for k, v in choices if force_text(k) in selected_choices]
+        selected_choices = {force_str(v) for v in selected_choices}
+        choices = [(k, v) for k, v in choices if force_str(k) in selected_choices]
         for option_value, option_label in choices:
             output.append(self.render_option(selected_choices, option_value, option_label))
         return '\n'.join(output)
@@ -421,7 +421,7 @@ class ModelSelect2Mixin(object):
         default = (None, [], 0)
         groups = [default]
         has_selected = False
-        selected_choices = {force_text(v) for v in value}
+        selected_choices = {force_str(v) for v in value}
         if not self.is_required and not self.allow_multiple_selected:
             default[1].append(self.create_option(name, '', '', False, 0))
         if not isinstance(self.choices, ModelChoiceIterator):
@@ -436,7 +436,7 @@ class ModelSelect2Mixin(object):
         )
         for option_value, option_label in choices:
             selected = (
-                force_text(option_value) in value and
+                force_str(option_value) in value and
                 (has_selected is False or self.allow_multiple_selected)
             )
             if selected is True and has_selected is False:
@@ -455,7 +455,7 @@ class ModelSelect2Mixin(object):
             choices = chain(self.choices, choices)
         else:
             choices = self.choices
-        selected_choices = {force_text(v) for v in selected_choices}
+        selected_choices = {force_str(v) for v in selected_choices}
         output = ['<option value=""></option>' if not self.is_required and not self.allow_multiple_selected else '']
         if isinstance(self.choices, ModelChoiceIterator):
             if self.queryset is None:
@@ -465,7 +465,7 @@ class ModelSelect2Mixin(object):
             choices = [(obj.pk, self.label_from_instance(obj))
                        for obj in self.choices.queryset.filter(pk__in=selected_choices)]
         else:
-            choices = [(k, v) for k, v in choices if force_text(k) in selected_choices]
+            choices = [(k, v) for k, v in choices if force_str(k) in selected_choices]
         for option_value, option_label in choices:
             output.append(self.render_option(selected_choices, option_value, option_label))
         return '\n'.join(output)
@@ -489,7 +489,7 @@ class ModelSelect2Mixin(object):
             str: Option label.
 
         """
-        return force_text(obj)
+        return force_str(obj)
     
     class Media:
         js = ("https://code.jquery.com/jquery-3.5.1.slim.min.js",)
